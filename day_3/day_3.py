@@ -69,6 +69,46 @@ def solution_day_3_1(input_txt):
     return sum(numbers)
 
 
+
+def solution_day_3_2(input_txt):
+    numbers = []    
+
+    checks = [(-1,-1),  # Top left
+            (-1,0),     # Top middle
+            (-1,1),     # Top right
+            (0,-1),     # Mid left
+            (0,1),      # Mid right
+            (1,-1),     # Bottom left
+            (1,0),      # Bottom middle
+            (1,1)]      # Bottom right
+    
+    for line in range(1, len(input_txt) - 1):
+        for char in range(1, len(input_txt[0]) - 1):
+            if input_txt[line][char] == "*":
+                numbers_set = set()
+                for check in checks:
+                    if input_txt[line+check[0]][char+check[1]].isdigit():
+                        number = input_txt[line+check[0]][char+check[1]]
+
+                        counter = 1
+                        # run left 
+                        while input_txt[line+check[0]][char+check[1]-counter].isdigit():
+                            number = input_txt[line+check[0]][char+check[1]-counter] + number
+                            counter += 1  
+
+                        counter = 1
+                        # run right
+                        while input_txt[line+check[0]][char+check[1]+counter].isdigit():
+                            number = number + input_txt[line+check[0]][char+check[1]+counter]
+                            counter += 1
+                        numbers_set.add(number)   
+
+                if len(numbers_set) == 2:
+                    numbers.append(int(numbers_set.pop()) * int(numbers_set.pop()))
+
+    return sum(numbers)            
+
+
 def prepare_input(input_txt):
     input_with_padding = []
     width = len(input_txt[0])
@@ -83,3 +123,4 @@ def prepare_input(input_txt):
 
 if __name__  == "__main__":
     print(solution_day_3_1(prepare_input(parse_input("input.txt"))))
+    print(solution_day_3_2(prepare_input(parse_input("input.txt"))))
