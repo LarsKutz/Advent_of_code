@@ -50,6 +50,28 @@ def solution_day_5_1(input_dic):
     return min(locations)
 
 
+def get_seeds(seeds):
+    # create paris from seeds list. First value ist start, secon is range
+    # [79, 14, 55, 13] -> 79 + 14 = 79...92 seeds, 55 + 13 = 55...67 seeds
+    # seeds = [[79, 14], [55, 13]
+    # return [79, 80, ..., 92, 55, 56, ..., 67]
+    seed_pairs = [[seeds[i], seeds[i+1]] for i in range(0, len(seeds), 2)]
+
+    return [x for pair in seed_pairs for x in range(pair[0], pair[0] + pair[1])]
+
+def solution_day_5_2(input_dic):
+    seeds = get_seeds(input_dic["seeds"])
+    locations = [1] * len(seeds)
+
+    for i, seed in enumerate(seeds):
+        current_seed = seed
+        for values in list(input_dic.values())[1:]:
+            current_seed = converter(values, current_seed)
+            locations[i] = current_seed
+
+    return min(locations)
+
+
 def prepare_data(input_txt):
     dic = defaultdict(list)
     seed_values = re.findall(r"\d+", input_txt[0])
@@ -73,4 +95,6 @@ def prepare_data(input_txt):
 
 if __name__  == "__main__":
     start_time = time()
-    print(f"Solution 1: {solution_day_5_1(prepare_data(parse_input('input.txt')))}, time: {time() - start_time}")
+    #print(f"Solution 1: {solution_day_5_1(prepare_data(parse_input('input.txt')))}, time: {time() - start_time}")
+    start_time = time()
+    print(f"Solution 2: {solution_day_5_2(prepare_data(parse_input('input.txt')))}, time: {time() - start_time}")
