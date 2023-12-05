@@ -1,6 +1,7 @@
 import re
 from collections import defaultdict
 from time import time
+import math
 
 
 def parse_input(file_name):
@@ -39,15 +40,15 @@ solution: [82, 43, 86, 35]
 """
 def solution_day_5_1(input_dic):
     seeds = input_dic["seeds"]
-    locations = [1] * len(seeds)
+    low_loc = math.inf
     
-    for i, seed in enumerate(seeds):
-        current_seed = seed
+    for seed in seeds:
+        cur_loc = seed
         for values in list(input_dic.values())[1:]:
-            current_seed = converter(values, current_seed)
-            locations[i] = current_seed
+            cur_loc = converter(values, cur_loc)
+        low_loc = cur_loc if cur_loc < low_loc else low_loc
 
-    return min(locations)
+    return low_loc
 
 
 def get_seeds(seeds):
@@ -57,19 +58,22 @@ def get_seeds(seeds):
     # return [79, 80, ..., 92, 55, 56, ..., 67]
     seed_pairs = [[seeds[i], seeds[i+1]] for i in range(0, len(seeds), 2)]
 
-    return [x for pair in seed_pairs for x in range(pair[0], pair[0] + pair[1])]
+    for i, pair in enumerate(seed_pairs, 1):
+        print(f"Curr pair: {i}/{len(seed_pairs)}: {pair}")
+        for x in range(pair[0], pair[0] + pair[1]):
+            yield x
+
 
 def solution_day_5_2(input_dic):
-    seeds = get_seeds(input_dic["seeds"])
-    locations = [1] * len(seeds)
+    low_loc = math.inf
 
-    for i, seed in enumerate(seeds):
-        current_seed = seed
+    for seed in get_seeds(input_dic["seeds"]):
+        cur_loc = seed
         for values in list(input_dic.values())[1:]:
-            current_seed = converter(values, current_seed)
-            locations[i] = current_seed
+            cur_loc = converter(values, cur_loc)
+        low_loc = cur_loc if cur_loc < low_loc else low_loc
 
-    return min(locations)
+    return low_loc
 
 
 def prepare_data(input_txt):
@@ -95,6 +99,6 @@ def prepare_data(input_txt):
 
 if __name__  == "__main__":
     start_time = time()
-    #print(f"Solution 1: {solution_day_5_1(prepare_data(parse_input('input.txt')))}, time: {time() - start_time}")
+    print(f"Solution 1: {solution_day_5_1(prepare_data(parse_input('input.txt')))}, time: {time() - start_time}")
     start_time = time()
     print(f"Solution 2: {solution_day_5_2(prepare_data(parse_input('input.txt')))}, time: {time() - start_time}")
