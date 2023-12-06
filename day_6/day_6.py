@@ -35,6 +35,20 @@ def solution_day_6_1(input_txt):
     return prod(solutions)
 
 
+def solution_day_6_2(input_txt):
+    time_lst = re.findall(r'\d+', input_txt[0])
+    time = int("".join(time_lst))
+    distance_lst = re.findall(r'\d+', input_txt[1])
+    distance = int("".join(distance_lst))
+    
+    counter = 0
+    for holding_time in range(1, time):
+        dist = calculate_distance(time, holding_time)
+        counter += 1 if dist > distance else 0
+
+    return counter    
+
+
 def calculate_distance(race_time, time):
     return time * (race_time - time)
 
@@ -51,3 +65,4 @@ def prepare_input(input_txt):
 
 if __name__  == "__main__":
     print(f"Solution 1: {solution_day_6_1(prepare_input(parse_input('input.txt')))}")
+    print(f"Solution 2: {solution_day_6_2(parse_input('input.txt'))}")
